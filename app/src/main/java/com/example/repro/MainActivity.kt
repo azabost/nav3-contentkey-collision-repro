@@ -59,6 +59,8 @@ class MainActivity : ComponentActivity() {
 
 // USE_FIX = false: default behavior — key.toString() returns "Root" for all Root objects,
 //                  causing contentKey collision between SectionA.Root and SectionB.Root.
-// USE_FIX = true:  workaround — qualifiedName is unique per class, no collision.
+// USE_FIX = true:  workaround — combines qualifiedName and toString(), mirroring NavKeySerializer.
+//                  Unique for both data object (via qualifiedName) and data class (via toString()).
+//                  String satisfies the contentKey saveability requirement on Android.
 private fun contentKey(key: Any): Any =
-    if (USE_FIX) checkNotNull(key::class.qualifiedName) else key.toString()
+    if (USE_FIX) "${checkNotNull(key::class.qualifiedName)}:$key" else key.toString()
